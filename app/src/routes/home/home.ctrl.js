@@ -29,7 +29,7 @@ const process = {
             }
         }
 
-        return res.kson({
+        return res.json({
             success: false,
             msg: "로그인에 실패하셨습니다.",
         })
