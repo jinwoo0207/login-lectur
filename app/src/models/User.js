@@ -5,9 +5,10 @@ class User {
     constructor(body){
         this.body = body;
     }
-    login(){
+    async login(){
         const client = this.body;
-        const { id, psword } = UserStorage.getUserInfo(client.id);
+        const { id , psword} = await UserStorage.getUserInfo(client.id); //await은 프로미스를 반환하는 것들에게만 사용가능하다.
+        // async 함수안에서만 await 사용 가능
         if (id){
             if (id === client.id && psword === client.psword){
                 return { success : true};

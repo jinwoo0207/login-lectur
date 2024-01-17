@@ -1,16 +1,21 @@
 "use strict";
 
-class UserStorage{
-    static #users = {
-        id: ["jinwoo", "ajw", "진우"],
-        name : ["안진우", "나개발", "안팀장"],
-        psword: ["0724", "1234", "12345"],
-    };
-    
+const fs = require("fs").promises; //프로미스에 pending은 데이터를 다 읽어오지 못했다.
+class UserStorage {
+    static #getUserInfo(data, id){
+        const users = JSON.parse(data);
+            const idx = users.id.indexOf(id);
+            const usersKeys = Object.keys(users); //유저들의 키값만 리스트로 만듬
+            const userInfo = usersKeys.reduce((newUser, info) => {
+                newUser[info] = users[info][idx];
+                return newUser;
+            }, {});
+        return userInfo;
+    }
     static getUsers(...flelds) {
-        const users = this.#users;
-        const newUsers = flelds.reduce((newUsers, field) =>{
-            if(users.hasOwnProperty(field)){
+        // const users = this.#users;
+        const newUsers = flelds.reduce((newUsers, field) => {
+            if (users.hasOwnProperty(field)) {
                 newUsers[field] = users[field];
             }
             return newUsers;
@@ -18,22 +23,19 @@ class UserStorage{
         return newUsers;
     }
     static getUserInfo(id) {
-        const users = this.#users;
-        const idx = users.id.indexOf(id);
-        const usersKeys = Object.keys(users); //유저들의 키값만 리스트로 만듬
-        const userInfo = usersKeys.reduce((newUser, info) => {
-            newUser[info] = users[info][idx];
-            return newUser;
-        }, {});
-
-        return userInfo;
+        return fs
+        .readFile("./src/databases/users.json")
+        .then((data) => {
+            return this.#getUserInfo(data, id);
+        })
+        .catch(console.errorr);
     }
-    static save(userInfo){
-        const users = this.#users;
+    static save(userInfo) {
+        // const users = this.#users;
         users.id.push(userInfo.id);
         users.name.push(userInfo.name);
         users.psword.push(userInfo.psword);
-        return {success : true};
+        return { success: true };
     }
 }
 
