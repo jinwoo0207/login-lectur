@@ -17,6 +17,17 @@ class UserStirage{
         }, {});
         return newUsers;
     }
+    static getUserInfo(id) {
+        const users = this.#users;
+        const idx = users.id.indexOf(id);
+        const usersKeys = Object.keys(users); //유저들의 키값만 리스트로 만듬
+        const userInfo = usersKeys.reduce((newUser, info) => {
+            newUser[info] = users[info][idx];
+            return newUser;
+        }, {});
+
+        return userInfo;
+    }
 }
 
 module.exports = UserStirage;
