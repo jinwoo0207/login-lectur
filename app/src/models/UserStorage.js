@@ -1,10 +1,10 @@
 "use strict";
 
-class UserStirage{
+class UserStorage{
     static #users = {
         id: ["jinwoo", "ajw", "진우"],
+        name : ["안진우", "나개발", "안팀장"],
         psword: ["0724", "1234", "12345"],
-        name : ["안진우", "나개발", "안팀장"]
     };
     
     static getUsers(...flelds) {
@@ -28,6 +28,13 @@ class UserStirage{
 
         return userInfo;
     }
+    static save(userInfo){
+        const users = this.#users;
+        users.id.push(userInfo.id);
+        users.name.push(userInfo.name);
+        users.psword.push(userInfo.psword);
+        return {success : true};
+    }
 }
 
-module.exports = UserStirage;
+module.exports = UserStorage;
