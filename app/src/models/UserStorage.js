@@ -2,58 +2,36 @@
 
 const { error } = require("console");
 
-const fs = require("fs").promises; //프로미스에 pending은 데이터를 다 읽어오지 못했다.
-class UserStorage {
-    static #getUserInfo(data, id){
-        const users = JSON.parse(data);
-            const idx = users.id.indexOf(id);
-            const usersKeys = Object.keys(users); //유저들의 키값만 리스트로 만듬
-            const userInfo = usersKeys.reduce((newUser, info) => {
-                newUser[info] = users[info][idx];
-                return newUser;
-            }, {});
-        return userInfo;
-    }
+const db = require("../config/db");
+const { resolve } = require("path");
+const { reject } = require("async");
+// const fs = require("fs").promises; //프로미스에 pending은 데이터를 다 읽어오지 못했다.
 
-    static #getUsers(data, isAll, fields){
-        const users = JSON.parse(data);
-        if (isAll === true) return users;
-        const newUsers = fields.reduce((newUsers, field) => {
-            if (users.hasOwnProperty(field)) {
-                newUsers[field] = users[field];
-            }
-            return newUsers;
-        }, {});
-        return newUsers;
-    };
-    static getUsers(isAll, ...fields) {
-        return fs
-        .readFile("./src/databases/users.json")
-        .then((data) => {
-            return this.#getUsers(data, isAll, fields);
-        })
-        .catch(console.error);
-        
-    };
+class UserStorage {
     static getUserInfo(id) {
-        return fs
-        .readFile("./src/databases/users.json")
-        .then((data) => {
-            return this.#getUserInfo(data, id);
-        })
-        .catch(console.error);
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM users WHERE id = ?";
+            db.query(query, [id], (err, data) => {
+                if (err) {
+                    reject(err);
+                };
+                resolve(data[0]);
+            });
+        });
     }
     static async save(userInfo) {
-        const users = await this.getUsers(true);
-        if (users.id.includes(userInfo.id)){    //입력한 아이디가 데이터 베이스 아이디 안에 있으면
-            throw "이미 존재하는 아이디입니다.";
-        }
-        //데이터 추가
-        users.id.push(userInfo.id);
-        users.name.push(userInfo.name);
-        users.psword.push(userInfo.psword);
-        fs.writeFile("./src/databases/users.json", JSON.stringify(users));
-        return { success : true };
+        return new Promise((resolve, reject) => {
+            const query = "INSERT INTO users(id, name, psword) VALUES(?, ?, ?);";
+            db.query(query, 
+                [userInfo.id, userInfo.name, userInfo.psword], 
+                (err) => {
+                if (err) {
+                    console.log(err)
+                    reject(`${err}`);
+                };
+                resolve({ success : true });
+            });
+        });
     }
 }
 

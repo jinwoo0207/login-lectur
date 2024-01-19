@@ -7,8 +7,9 @@ class User {
     }
     async login(){
         const client = this.body;
-        const { id , psword} = await UserStorage.getUserInfo(client.id); //await은 프로미스를 반환하는 것들에게만 사용가능하다.
-        // async 함수안에서만 await 사용 가능
+        try{
+        const {id, psword} = await UserStorage.getUserInfo(client.id); //await은 프로미스를 반환하는 것들에게만 사용가능하다.
+        // async 함수안에서만 await 사용 가능, 리턴 확인 꼭하기...
         if (id){
             if (id === client.id && psword === client.psword){
                 return { success : true};
@@ -16,6 +17,10 @@ class User {
                 return { success : false, msg : "비밀번호가 틀렸습니다."};
         }
         return { success : false, msg : "존재하지 않는 아이디입니다."};
+        }
+        catch{
+            return { success : false, msg : err};
+        }
     }
     async register(){
         const client = this.body;
@@ -23,7 +28,7 @@ class User {
         const response = await UserStorage.save(client);
             return response;
         }catch (err) {
-            console.log(err);
+            // console.log(err);
             return { success : false, msg : err };
         }
     }
