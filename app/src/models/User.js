@@ -18,8 +18,8 @@ class User {
         }
         return { success : false, msg : "존재하지 않는 아이디입니다."};
         }
-        catch{
-            return { success : false, msg : err};
+        catch (err){
+            return { success : false, err};
         }
     }
     async register(){
@@ -29,7 +29,7 @@ class User {
             return response;
         }catch (err) {
             // console.log(err);
-            return { success : false, msg : err };
+            return { success : false, err };
         }
     }
 }

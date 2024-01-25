@@ -1,6 +1,7 @@
+const { message } = require("statuses");
 const {createLogger, transports, format} = require("winston");
 //위에 변수는 winston.을 대체한다. 즉 winston.createLogger, winston.transports 와 같다.
-const {combine, timestamp, label, json, simple, colorize, printf} = format;
+const {combine, timestamp, label, simple, colorize, printf} = format;
 //1줄과 동일하게 format을 대체한다. 
 const printFormat = printf(({ timestamp, label ,level, message }) =>{
     return `${timestamp} [${label}] ${level} : ${message}`;
@@ -40,4 +41,7 @@ const logger = createLogger({
 if(process.env.NODE_ENV !== "production"){
     logger.add(opts.console);
 }
+logger.stream = {
+    write : (message) => logger.info(message),
+};
 module.exports = logger;
