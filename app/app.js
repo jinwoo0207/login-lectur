@@ -2,7 +2,7 @@
 
 // 모듈
 const express = require("express");
-const bodyParser = require("body-parser"); // 주석 해제시 오류.
+const bodyParser = require("body-parser"); 
 // console.log(require("body-parser"));
 const dotenv = require("dotenv");
 
