@@ -10,19 +10,15 @@ const { reject, log } = require("async");
 class todoStorage {
 
     static async createTodo(){
-        return new Promise((resolve,reject))
     }
 
     static async updateTodo(){
-        return new Promise((resolve,reject))
     }
 
     static async deleteTodo(){
-        return new Promise((resolve,reject))
     }
 
     static async getTodo(){
-        return new Promise((resolve,reject))
     }
 
 
