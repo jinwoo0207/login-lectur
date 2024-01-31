@@ -2,26 +2,38 @@
 
 //랜더를 사용하면 처음엔 200번 반환 후 304를 반환한다.
 const logger = require("../../config/logger");
-const Todo = require("../../models/todo"); 
+const Todo = require("../../models/todo");
 const output = {
     hello: (req, res) => {
         logger.info(`GET / 304 "홈 화면으로 이동"`);
         res.render("home/index");
     },
-    bringTodo : async (req, res) => {
-
-    },  
+    bringTodo: async (req, res) => {
+        const todo = new Todo();
+        const response = await todo.bringTodo();
+        return res.json(response);
+    },
 };
 
 const process = {
-    createTodo : async (req, res) =>{
-        
+    createTodo: async (req, res) => {
+        const todo = new Todo();
+        const response = await todo.createTodo(req.body);//body는 키-값 데이터쌍
+        // return response;// 이 부분이 현재 무한로딩되는거 문제네요
+        return res.json(response); //return response와 return res.json(response) 왜 잘못됬는지 파악하는것이 오늘의 숙제
+        //찾아봤는데 express를 응답할 때에는 json형식으로 보내줘야 무한 대기가 안 생기는 것 같습니다.
     },
-    updateTodo : async (req, res) => {
-        
-    },  
-    deleteTodo : async (req, res) => {
-        
+    updateTodo: async (req, res) => {
+        const todo = new Todo();
+        console.log(req.params)
+        const response = await todo.updateTodo(req.body, req.params); //params 라우터의 매개변수 /뒤에 내용을 담는다
+
+        return res.json(response);
+    },
+    deleteTodo: async (req, res) => {
+        const todo = new Todo();
+        const response = await todo.deleteTodo(req.params);
+        return res.json(response);
     },
 
 };
@@ -31,9 +43,9 @@ module.exports = {
 };
 
 const log = (response, url) => {
-    if(response.err){
+    if (response.err) {
         logger.error(`${url.method} ${url.path} ${url.status} Response: ${response.success} ${response.err}`)
-    }else{
+    } else {
         logger.info(`${url.method} ${url.path} ${url.status} Response: ${response.success} ${response.msg || ""}`);
     };
 }
@@ -92,7 +104,7 @@ const log = (response, url) => {
 //         const todo = new Todo();
 //         const response = await todo.updateTodo(req.body, req.params);
 //         return res.json(response);
-//     },  
+//     },
 //     deleteTodo : async (req, res) => {
 //         const todo = new Todo();
 //         const response = await todo.deleteTodo(req.params);
@@ -111,5 +123,5 @@ const log = (response, url) => {
 //         const todo = new Todo();
 //         const response = await todo.bringTodo();
 //         return res.json(response);
-//     },  
+//     },
 // };

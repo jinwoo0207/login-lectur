@@ -8,10 +8,8 @@ const ctrl = require("./home.ctrl");
 router.get("/", ctrl.output.hello);
 router.get("/bringTodo", ctrl.output.bringTodo);
 
-// router.post("/todolist", ctrl.process.todolist);
 router.post("/createTodo", ctrl.process.createTodo);
-router.patch("/updateTodo/:id", ctrl.process.updateTodo);
-router.delete("/deleteTodo/:todoId", ctrl.process.deleteTodo);
-
+router.patch("/updateTodo/:updateTodoId", ctrl.process.updateTodo);
+router.delete("/deleteTodo/:deleteTodoId", ctrl.process.deleteTodo);
 
 module.exports = router;    

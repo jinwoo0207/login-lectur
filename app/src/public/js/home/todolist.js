@@ -1,18 +1,18 @@
 "use strict";
 
 const id = document.querySelector("#id"),
-    loginBtn = document.querySelector("#button");
+    createTodoBtn = document.querySelector("#button");
 
-loginBtn.addEventListener("click", login);
+    createTodoBtn.addEventListener("click", createTodo);
 
-function login() {
+function createTodo() {
     if(!id.value){
         return alert("할일을 입력해 주세요!");
     }
     const req = {
         id: id.value,
     };
-    fetch("/todolist", {
+    fetch("/createTodo", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
