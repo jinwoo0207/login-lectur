@@ -61,7 +61,7 @@ class todoStorage {
                 (err) => {
                     if (err) { reject("할일 전체 삭제 실패")}
                 }
-            resolve("할일 전체 삭제 성공")
+            resolve({success : true})
         })
     }
     static async checkTodo(is_check, checkTodoId){

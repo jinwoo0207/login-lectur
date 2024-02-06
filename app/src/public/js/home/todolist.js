@@ -4,11 +4,12 @@ const id = document.querySelector("#id"),
     createTodoBtn = document.querySelector("#button");
     //getTodolist = document.querySelector("#newBoxId");
     createTodoBtn.addEventListener("click", createTodo);
-    
+const deleteTodoAllBtu = document.querySelector('#deleteAll');
+
     window.addEventListener("load", getTodo);
     // window.onload(getTodo);
 
-
+    deleteTodoAllBtu.addEventListener("click", deleteTodoAll);
 function getTodo() {fetch("/bringTodo", {
         method: "GET",
         headers: {
@@ -47,12 +48,12 @@ function getTodo() {fetch("/bringTodo", {
         .then((res) => {
             console.log(1);
             
-            // 삭제가 성공했을 때만 해당 DOM 요소를 삭제
+            // 삭제가 성공했을 때
             if (res.success) {
                 const deletedElement = document.querySelector(`#delete${id}`).parentNode;
                 deletedElement.remove();
             } else {
-                // 삭제에 실패한 경우에 대한 처리
+                // 삭제에 실패한 경우
                 if (res.err) {
                     return alert(res.err);
                 } else {
@@ -63,6 +64,38 @@ function getTodo() {fetch("/bringTodo", {
         .catch((err) => {
             console.error("할일 삭제 중 에러 발생", err);
         });
+    }
+    
+    function deleteTodoAll() {
+        if (confirm("정말로 전체를 삭제하시겠습니까?")) {
+            fetch(`/deleteTodoAll`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((res) => res.json())
+            .then((res) => {
+                // 삭제가 성공했을 때
+                if (res.success) {
+                    // 모든 할일 목록 삭제
+                    const todoList = document.querySelectorAll('p');
+                    todoList.forEach(element => element.remove());
+                } else {
+                    // 삭제에 실패한 경우
+                    if (res.err) {
+                        return alert(res.err);
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error("할일 삭제 중 에러 발생", err);
+            });
+        } else {
+            alert("취소되었습니다.");
+        }
     }
     
 // function deleteTodo(id) {
